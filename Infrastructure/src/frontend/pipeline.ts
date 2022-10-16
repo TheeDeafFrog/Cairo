@@ -5,6 +5,7 @@ import {
     aws_codestarconnections as csConnections,
     aws_codebuild as codeBuild,
 } from 'aws-cdk-lib';
+import { ComputeType } from 'aws-cdk-lib/aws-codebuild';
 import { Construct } from 'constructs';
 
 export function generatePipeline(scope: Construct, betaBucket: s3.Bucket) {
@@ -40,6 +41,7 @@ export function generatePipeline(scope: Construct, betaBucket: s3.Bucket) {
                 build: {
                     commands: [
                         'cd Frontend/cairo',
+                        'npm install',
                         'npm run build'
                     ]
                 }
@@ -50,6 +52,9 @@ export function generatePipeline(scope: Construct, betaBucket: s3.Bucket) {
                 ]
             }
         }),
+        environment:{
+            computeType: ComputeType.SMALL
+        }
     });
 
     const buildOutput = new pipelines.Artifact();
