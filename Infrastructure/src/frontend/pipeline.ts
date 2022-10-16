@@ -40,7 +40,7 @@ export function generatePipeline(scope: Construct, betaBucket: s3.Bucket) {
             phases: {
                 install: {
                     'runtime-versions': {
-                        node: '16'
+                        node: 'latest'
                     },
                     commands: [
                         'cd Frontend/cairo',
