@@ -26,7 +26,10 @@ export class CairoFrontendStack extends cdk.Stack {
 
     generatePipeline(this, betaBucket);
 
-    const hostedZone = HostedZone.fromHostedZoneId(this, 'kevinr.net', process.env.hostedZone as string);
+    const hostedZone = HostedZone.fromHostedZoneAttributes(this, 'kevinrNetHostedZone', {
+      hostedZoneId: process.env.hostedZone as string,
+      zoneName: 'kevinr.net'
+    });
     
     const certificate = new certificateManager.DnsValidatedCertificate(this, 'betaCertificate', {
       domainName: 'cv.kevinr.net',
@@ -46,7 +49,7 @@ export class CairoFrontendStack extends cdk.Stack {
       priceClass: PriceClass.PRICE_CLASS_100,
     });
 
-    new route53.ARecord(this, 'cvBetaRecord', {
+    new route53.ARecord(this, 'beta.cv.kevinr.net', {
       zone: hostedZone,
       target: route53.RecordTarget.fromAlias(new CloudFrontTarget(betaDistribution)),
       recordName: 'beta.cv.kevinr.net',
@@ -67,7 +70,7 @@ export class CairoFrontendStack extends cdk.Stack {
     const prodTarget = route53.RecordTarget.fromAlias(new CloudFrontTarget(prodDistribution));
 
     ['www.kevinr.net', 'cv.kevinr.net'].forEach((recordName) => {
-      new route53.ARecord(this, 'cvRecord', {
+      new route53.ARecord(this, recordName, {
         zone: hostedZone,
         target: prodTarget,
         recordName: recordName
