@@ -38,10 +38,17 @@ export function generatePipeline(scope: Construct, betaBucket: s3.Bucket) {
         buildSpec: codeBuild.BuildSpec.fromObject({
             version: '0.2',
             phases: {
-                build: {
+                install: {
+                    'runtime-versions': {
+                        node: '18'
+                    },
                     commands: [
                         'cd Frontend/cairo',
-                        'npm install',
+                        'npm install'
+                    ]
+                },
+                build: {
+                    commands: [
                         'npm run build'
                     ]
                 }
@@ -50,7 +57,7 @@ export function generatePipeline(scope: Construct, betaBucket: s3.Bucket) {
                 files: [
                     'Frontend/cairo/build/**/*'
                 ]
-            }
+            },
         }),
         environment:{
             computeType: ComputeType.SMALL
