@@ -1,10 +1,10 @@
-// import React from "react";
-// import ReactDOM from "react-dom/client";
-// import { App } from "./App";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { App } from "./App";
 
-// const root = ReactDOM.createRoot(document.body);
-// root.render(<App/>);
+const reactRoot = document.createElement('div');
+reactRoot.id = 'react_root';
+document.body.appendChild(reactRoot);
 
-const e = document.createElement('div');
-e.innerHTML = 'hello from basic';
-document.body.appendChild(e);
+const root = ReactDOM.createRoot(reactRoot);
+root.render(<App/>);

@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "test": "echo 'not configured'",
-    "build": "webpack",
-    "serve": "webpack serve --open"
+    "build": "webpack --config webpack.prod.js",
+    "serve": "webpack serve --open --config webpack.dev.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.19.3",
@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "webpack-merge": "^5.8.0"
   }
 }

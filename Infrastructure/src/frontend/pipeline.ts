@@ -62,7 +62,8 @@ export function generatePipeline(scope: Construct, betaBucket: s3.Bucket) {
                 files: [
                     'dist/**/*'
                 ],
-                'base-directory': 'Frontend'
+                'base-directory': 'Frontend',
+                'discard-paths': 'yes'
             },
         }),
         environment:{

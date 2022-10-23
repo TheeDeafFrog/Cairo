@@ -45,7 +45,7 @@ export class CairoFrontendStack extends cdk.Stack {
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS
       },
       certificate: certificate,
-      defaultRootObject: 'dist/index.html',
+      defaultRootObject: 'index.html',
       domainNames: ['beta.cv.kevinr.net'],
       priceClass: PriceClass.PRICE_CLASS_100,
     });
@@ -64,7 +64,7 @@ export class CairoFrontendStack extends cdk.Stack {
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS
       },
       certificate: certificate,
-      defaultRootObject: 'dist/index.html',
+      defaultRootObject: 'index.html',
       domainNames: ['cv.kevinr.net', 'www.kevinr.net'],
       priceClass: PriceClass.PRICE_CLASS_100,
     });
