@@ -6,7 +6,7 @@ import {
   aws_route53 as route53,
   Duration
 } from 'aws-cdk-lib';
-import { CachePolicy, PriceClass } from 'aws-cdk-lib/aws-cloudfront';
+import { CachePolicy, PriceClass, ViewerProtocolPolicy } from 'aws-cdk-lib/aws-cloudfront';
 import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { HostedZone } from 'aws-cdk-lib/aws-route53';
 import { CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets';
@@ -41,10 +41,11 @@ export class CairoFrontendStack extends cdk.Stack {
     const betaDistribution = new cloudfront.Distribution(this, 'cairoBeta', {
       defaultBehavior: {
         origin: new S3Origin(betaBucket),
-        cachePolicy: CachePolicy.CACHING_DISABLED
+        cachePolicy: CachePolicy.CACHING_DISABLED,
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS
       },
       certificate: certificate,
-      defaultRootObject: 'index.html',
+      defaultRootObject: 'dist/index.html',
       domainNames: ['beta.cv.kevinr.net'],
       priceClass: PriceClass.PRICE_CLASS_100,
     });
@@ -59,10 +60,11 @@ export class CairoFrontendStack extends cdk.Stack {
     const prodDistribution = new cloudfront.Distribution(this, 'cairoProd', {
       defaultBehavior: {
         origin: new S3Origin(prodBucket),
-        cachePolicy: CachePolicy.CACHING_DISABLED
+        cachePolicy: CachePolicy.CACHING_DISABLED,
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS
       },
       certificate: certificate,
-      defaultRootObject: 'index.html',
+      defaultRootObject: 'dist/index.html',
       domainNames: ['cv.kevinr.net', 'www.kevinr.net'],
       priceClass: PriceClass.PRICE_CLASS_100,
     });

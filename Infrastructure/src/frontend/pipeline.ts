@@ -43,25 +43,26 @@ export function generatePipeline(scope: Construct, betaBucket: s3.Bucket) {
                         node: 'latest'
                     },
                     commands: [
-                        'cd Frontend/cairo',
+                        'cd Frontend',
                         'npm install'
                     ]
                 },
                 pre_build: {
                     commands: [
-                        'CI=true npm test'
+                        'npm run test'
                     ]
                 },
                 build: {
                     commands: [
-                        'CI=true npm run build'
+                        'npm run build'
                     ]
                 }
             },
             artifacts: {
                 files: [
-                    'Frontend/cairo/build/**/*'
-                ]
+                    'dist/**/*'
+                ],
+                'base-directory': 'Frontend'
             },
         }),
         environment:{
