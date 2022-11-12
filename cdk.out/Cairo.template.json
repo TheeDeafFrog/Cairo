@@ -1,0 +1,1510 @@
+{
+ "Resources": {
+  "ProdBucket0289CECC": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "cv.kevinr.net"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "Cairo/ProdBucket/Resource"
+   }
+  },
+  "ProdBucketPolicy62D512B3": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "ProdBucket0289CECC"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:GetObject",
+       "Effect": "Allow",
+       "Principal": {
+        "CanonicalUser": {
+         "Fn::GetAtt": [
+          "CairoProdDistributionOrigin1S3Origin671F5BED",
+          "S3CanonicalUserId"
+         ]
+        }
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "ProdBucket0289CECC",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/ProdBucket/Policy/Resource"
+   }
+  },
+  "BetaBucket9368E41E": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "beta.cv.kevinr.net"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "Cairo/BetaBucket/Resource"
+   }
+  },
+  "BetaBucketPolicyE1D5697D": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "BetaBucket9368E41E"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:GetObject",
+       "Effect": "Allow",
+       "Principal": {
+        "CanonicalUser": {
+         "Fn::GetAtt": [
+          "CairoBetaDistributionOrigin1S3Origin9D313AE9",
+          "S3CanonicalUserId"
+         ]
+        }
+       },
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "BetaBucket9368E41E",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/BetaBucket/Policy/Resource"
+   }
+  },
+  "CairoPipelineArtifactsBucket19A923F5": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "aws:kms"
+       }
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/ArtifactsBucket/Resource"
+   }
+  },
+  "CairoPipelineArtifactsBucketPolicy51BA5EEE": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "CairoPipelineArtifactsBucket19A923F5"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineArtifactsBucket19A923F5",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CairoPipelineArtifactsBucket19A923F5",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/ArtifactsBucket/Policy/Resource"
+   }
+  },
+  "CairoPipelineRole53120952": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codepipeline.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Role/Resource"
+   }
+  },
+  "CairoPipelineRoleDefaultPolicy06C2393B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineArtifactsBucket19A923F5",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CairoPipelineArtifactsBucket19A923F5",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineBetabetaDeployCodePipelineActionRole922EAA69",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineBuildbuildCodePipelineActionRole0D80305C",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineProdPromotionprodPromotionCodePipelineActionRoleE222ED19",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineProdprodDeployCodePipelineActionRole8D8654EF",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineSourcegithubSourceCodePipelineActionRole206CA4E6",
+          "Arn"
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CairoPipelineRoleDefaultPolicy06C2393B",
+    "Roles": [
+     {
+      "Ref": "CairoPipelineRole53120952"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Role/DefaultPolicy/Resource"
+   }
+  },
+  "CairoPipelineE8E892FB": {
+   "Type": "AWS::CodePipeline::Pipeline",
+   "Properties": {
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "CairoPipelineRole53120952",
+      "Arn"
+     ]
+    },
+    "Stages": [
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Source",
+         "Owner": "AWS",
+         "Provider": "CodeStarSourceConnection",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ConnectionArn": {
+          "Fn::GetAtt": [
+           "CairoGithubConnection",
+           "ConnectionArn"
+          ]
+         },
+         "FullRepositoryId": "TheeDeafFrog/Cairo",
+         "BranchName": "release"
+        },
+        "Name": "githubSource",
+        "OutputArtifacts": [
+         {
+          "Name": "Artifact_Source_githubSource"
+         }
+        ],
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CairoPipelineSourcegithubSourceCodePipelineActionRole206CA4E6",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Source"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Build",
+         "Owner": "AWS",
+         "Provider": "CodeBuild",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ProjectName": {
+          "Ref": "CairoBuildED363897"
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "Artifact_Source_githubSource"
+         }
+        ],
+        "Name": "build",
+        "OutputArtifacts": [
+         {
+          "Name": "Artifact_Build_build"
+         }
+        ],
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CairoPipelineBuildbuildCodePipelineActionRole0D80305C",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Build"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "S3",
+         "Version": "1"
+        },
+        "Configuration": {
+         "BucketName": {
+          "Ref": "BetaBucket9368E41E"
+         },
+         "Extract": "true"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "Artifact_Build_build"
+         }
+        ],
+        "Name": "betaDeploy",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CairoPipelineBetabetaDeployCodePipelineActionRole922EAA69",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Beta"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Approval",
+         "Owner": "AWS",
+         "Provider": "Manual",
+         "Version": "1"
+        },
+        "Name": "prodPromotion",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CairoPipelineProdPromotionprodPromotionCodePipelineActionRoleE222ED19",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "ProdPromotion"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "S3",
+         "Version": "1"
+        },
+        "Configuration": {
+         "BucketName": {
+          "Ref": "ProdBucket0289CECC"
+         },
+         "Extract": "true"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "Artifact_Build_build"
+         }
+        ],
+        "Name": "prodDeploy",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CairoPipelineProdprodDeployCodePipelineActionRole8D8654EF",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Prod"
+     }
+    ],
+    "ArtifactStore": {
+     "Location": {
+      "Ref": "CairoPipelineArtifactsBucket19A923F5"
+     },
+     "Type": "S3"
+    },
+    "Name": "cairoFrontendPipeline"
+   },
+   "DependsOn": [
+    "CairoPipelineRoleDefaultPolicy06C2393B",
+    "CairoPipelineRole53120952"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Resource"
+   }
+  },
+  "CairoPipelineSourcegithubSourceCodePipelineActionRole206CA4E6": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::949565233592:root"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Source/githubSource/CodePipelineActionRole/Resource"
+   }
+  },
+  "CairoPipelineSourcegithubSourceCodePipelineActionRoleDefaultPolicyA315F62D": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "codestar-connections:UseConnection",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CairoGithubConnection",
+         "ConnectionArn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineArtifactsBucket19A923F5",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CairoPipelineArtifactsBucket19A923F5",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:PutObjectAcl",
+        "s3:PutObjectVersionAcl"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "CairoPipelineArtifactsBucket19A923F5",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CairoPipelineSourcegithubSourceCodePipelineActionRoleDefaultPolicyA315F62D",
+    "Roles": [
+     {
+      "Ref": "CairoPipelineSourcegithubSourceCodePipelineActionRole206CA4E6"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Source/githubSource/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CairoPipelineBuildbuildCodePipelineActionRole0D80305C": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::949565233592:root"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Build/build/CodePipelineActionRole/Resource"
+   }
+  },
+  "CairoPipelineBuildbuildCodePipelineActionRoleDefaultPolicy99305F51": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "codebuild:BatchGetBuilds",
+        "codebuild:StartBuild",
+        "codebuild:StopBuild"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CairoBuildED363897",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CairoPipelineBuildbuildCodePipelineActionRoleDefaultPolicy99305F51",
+    "Roles": [
+     {
+      "Ref": "CairoPipelineBuildbuildCodePipelineActionRole0D80305C"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Build/build/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CairoPipelineBetabetaDeployCodePipelineActionRole922EAA69": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::949565233592:root"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Beta/betaDeploy/CodePipelineActionRole/Resource"
+   }
+  },
+  "CairoPipelineBetabetaDeployCodePipelineActionRoleDefaultPolicy7E68747A": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "BetaBucket9368E41E",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "BetaBucket9368E41E",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineArtifactsBucket19A923F5",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CairoPipelineArtifactsBucket19A923F5",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CairoPipelineBetabetaDeployCodePipelineActionRoleDefaultPolicy7E68747A",
+    "Roles": [
+     {
+      "Ref": "CairoPipelineBetabetaDeployCodePipelineActionRole922EAA69"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Beta/betaDeploy/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CairoPipelineProdPromotionprodPromotionCodePipelineActionRoleE222ED19": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::949565233592:root"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/ProdPromotion/prodPromotion/CodePipelineActionRole/Resource"
+   }
+  },
+  "CairoPipelineProdprodDeployCodePipelineActionRole8D8654EF": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::949565233592:root"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Prod/prodDeploy/CodePipelineActionRole/Resource"
+   }
+  },
+  "CairoPipelineProdprodDeployCodePipelineActionRoleDefaultPolicy1B0CEF20": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ProdBucket0289CECC",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ProdBucket0289CECC",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineArtifactsBucket19A923F5",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CairoPipelineArtifactsBucket19A923F5",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CairoPipelineProdprodDeployCodePipelineActionRoleDefaultPolicy1B0CEF20",
+    "Roles": [
+     {
+      "Ref": "CairoPipelineProdprodDeployCodePipelineActionRole8D8654EF"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoPipeline/Prod/prodDeploy/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CairoGithubConnection": {
+   "Type": "AWS::CodeStarConnections::Connection",
+   "Properties": {
+    "ConnectionName": "cairoConnection",
+    "ProviderType": "GitHub"
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoGithubConnection"
+   }
+  },
+  "CairoBuildRoleAB3BD563": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codebuild.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoBuild/Role/Resource"
+   }
+  },
+  "CairoBuildRoleDefaultPolicy3F6A678C": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:us-east-1:949565233592:log-group:/aws/codebuild/",
+           {
+            "Ref": "CairoBuildED363897"
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:logs:us-east-1:949565233592:log-group:/aws/codebuild/",
+           {
+            "Ref": "CairoBuildED363897"
+           }
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "codebuild:BatchPutCodeCoverages",
+        "codebuild:BatchPutTestCases",
+        "codebuild:CreateReport",
+        "codebuild:CreateReportGroup",
+        "codebuild:UpdateReport"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:codebuild:us-east-1:949565233592:report-group/",
+          {
+           "Ref": "CairoBuildED363897"
+          },
+          "-*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CairoPipelineArtifactsBucket19A923F5",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CairoPipelineArtifactsBucket19A923F5",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CairoBuildRoleDefaultPolicy3F6A678C",
+    "Roles": [
+     {
+      "Ref": "CairoBuildRoleAB3BD563"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoBuild/Role/DefaultPolicy/Resource"
+   }
+  },
+  "CairoBuildED363897": {
+   "Type": "AWS::CodeBuild::Project",
+   "Properties": {
+    "Artifacts": {
+     "Type": "CODEPIPELINE"
+    },
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_SMALL",
+     "Image": "aws/codebuild/standard:1.0",
+     "ImagePullCredentialsType": "CODEBUILD",
+     "PrivilegedMode": false,
+     "Type": "LINUX_CONTAINER"
+    },
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "CairoBuildRoleAB3BD563",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"install\": {\n      \"runtime-versions\": {\n        \"node\": \"latest\"\n      },\n      \"commands\": [\n        \"npm install\"\n      ]\n    },\n    \"pre_build\": {\n      \"commands\": [\n        \"npm run test\"\n      ]\n    },\n    \"build\": {\n      \"commands\": [\n        \"npm run build\"\n      ]\n    }\n  },\n  \"artifacts\": {\n    \"files\": [\n      \"**/*\"\n    ],\n    \"base-directory\": \"dist\"\n  }\n}",
+     "Type": "CODEPIPELINE"
+    },
+    "Cache": {
+     "Type": "NO_CACHE"
+    },
+    "EncryptionKey": "alias/aws/s3"
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoBuild/Resource"
+   }
+  },
+  "AdminUserPolicyF39424FA": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "codepipeline:ListPipelines",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "codepipeline:GetPipeline",
+        "codepipeline:GetPipelineExecution",
+        "codepipeline:GetPipelineState"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:codepipeline:us-east-1:949565233592:",
+          {
+           "Ref": "CairoPipelineE8E892FB"
+          }
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "codepipeline:PutApprovalResult",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:codepipeline:us-east-1:949565233592:",
+          {
+           "Ref": "CairoPipelineE8E892FB"
+          },
+          "/ProdPromotion/prodPromotion"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "AdminUserPolicyF39424FA",
+    "Users": [
+     "Admin"
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/AdminUser/Policy/Resource"
+   }
+  },
+  "BetaCertificateCertificateRequestorFunctionServiceRole6393C2DF": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/BetaCertificate/CertificateRequestorFunction/ServiceRole/Resource"
+   }
+  },
+  "BetaCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy9E940F91": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "acm:AddTagsToCertificate",
+        "acm:DeleteCertificate",
+        "acm:DescribeCertificate",
+        "acm:RequestCertificate",
+        "route53:GetChange"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "route53:changeResourceRecordSets",
+       "Condition": {
+        "ForAllValues:StringEquals": {
+         "route53:ChangeResourceRecordSetsRecordTypes": [
+          "CNAME"
+         ],
+         "route53:ChangeResourceRecordSetsActions": [
+          "UPSERT"
+         ]
+        },
+        "ForAllValues:StringLike": {
+         "route53:ChangeResourceRecordSetsNormalizedRecordNames": [
+          "*.cv.kevinr.net",
+          "*.beta.cv.kevinr.net",
+          "*.www.kevinr.net"
+         ]
+        }
+       },
+       "Effect": "Allow",
+       "Resource": "arn:aws:route53:::hostedzone/Z81GUQ5XK4FPH"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BetaCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy9E940F91",
+    "Roles": [
+     {
+      "Ref": "BetaCertificateCertificateRequestorFunctionServiceRole6393C2DF"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/BetaCertificate/CertificateRequestorFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "BetaCertificateCertificateRequestorFunction1673CE47": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-949565233592-us-east-1",
+     "S3Key": "0affa35a9d750381b76be83ff9cedeb2e455e8903fcf4d7db4d1c1e2c9c7cd54.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "BetaCertificateCertificateRequestorFunctionServiceRole6393C2DF",
+      "Arn"
+     ]
+    },
+    "Handler": "index.certificateRequestHandler",
+    "Runtime": "nodejs14.x",
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "BetaCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy9E940F91",
+    "BetaCertificateCertificateRequestorFunctionServiceRole6393C2DF"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "Cairo/BetaCertificate/CertificateRequestorFunction/Resource",
+    "aws:asset:path": "asset.0affa35a9d750381b76be83ff9cedeb2e455e8903fcf4d7db4d1c1e2c9c7cd54",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "BetaCertificateCertificateRequestorResource0F0E39E5": {
+   "Type": "AWS::CloudFormation::CustomResource",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "BetaCertificateCertificateRequestorFunction1673CE47",
+      "Arn"
+     ]
+    },
+    "DomainName": "cv.kevinr.net",
+    "SubjectAlternativeNames": [
+     "beta.cv.kevinr.net",
+     "www.kevinr.net"
+    ],
+    "HostedZoneId": "Z81GUQ5XK4FPH",
+    "Region": "us-east-1"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "Cairo/BetaCertificate/CertificateRequestorResource/Default"
+   }
+  },
+  "CairoBetaDistributionOrigin1S3Origin9D313AE9": {
+   "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+   "Properties": {
+    "CloudFrontOriginAccessIdentityConfig": {
+     "Comment": "Identity for CairoCairoBetaDistributionOrigin1243FEF22"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoBetaDistribution/Origin1/S3Origin/Resource"
+   }
+  },
+  "CairoBetaDistribution0470BCF4": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "Aliases": [
+      "beta.cv.kevinr.net"
+     ],
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+      "Compress": true,
+      "TargetOriginId": "CairoCairoBetaDistributionOrigin1243FEF22",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "DomainName": {
+        "Fn::GetAtt": [
+         "BetaBucket9368E41E",
+         "RegionalDomainName"
+        ]
+       },
+       "Id": "CairoCairoBetaDistributionOrigin1243FEF22",
+       "S3OriginConfig": {
+        "OriginAccessIdentity": {
+         "Fn::Join": [
+          "",
+          [
+           "origin-access-identity/cloudfront/",
+           {
+            "Ref": "CairoBetaDistributionOrigin1S3Origin9D313AE9"
+           }
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "PriceClass": "PriceClass_100",
+     "ViewerCertificate": {
+      "AcmCertificateArn": {
+       "Fn::GetAtt": [
+        "BetaCertificateCertificateRequestorResource0F0E39E5",
+        "Arn"
+       ]
+      },
+      "MinimumProtocolVersion": "TLSv1.2_2021",
+      "SslSupportMethod": "sni-only"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoBetaDistribution/Resource"
+   }
+  },
+  "betacvkevinrnetBD3390F8": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "Name": "beta.cv.kevinr.net.",
+    "Type": "A",
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "CairoBetaDistribution0470BCF4",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z81GUQ5XK4FPH"
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/beta.cv.kevinr.net/Resource"
+   }
+  },
+  "CairoProdDistributionOrigin1S3Origin671F5BED": {
+   "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+   "Properties": {
+    "CloudFrontOriginAccessIdentityConfig": {
+     "Comment": "Identity for CairoCairoProdDistributionOrigin19BDB4521"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoProdDistribution/Origin1/S3Origin/Resource"
+   }
+  },
+  "CairoProdDistribution0D9049F6": {
+   "Type": "AWS::CloudFront::Distribution",
+   "Properties": {
+    "DistributionConfig": {
+     "Aliases": [
+      "cv.kevinr.net",
+      "www.kevinr.net"
+     ],
+     "DefaultCacheBehavior": {
+      "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+      "Compress": true,
+      "TargetOriginId": "CairoCairoProdDistributionOrigin19BDB4521",
+      "ViewerProtocolPolicy": "redirect-to-https"
+     },
+     "DefaultRootObject": "index.html",
+     "Enabled": true,
+     "HttpVersion": "http2",
+     "IPV6Enabled": true,
+     "Origins": [
+      {
+       "DomainName": {
+        "Fn::GetAtt": [
+         "ProdBucket0289CECC",
+         "RegionalDomainName"
+        ]
+       },
+       "Id": "CairoCairoProdDistributionOrigin19BDB4521",
+       "S3OriginConfig": {
+        "OriginAccessIdentity": {
+         "Fn::Join": [
+          "",
+          [
+           "origin-access-identity/cloudfront/",
+           {
+            "Ref": "CairoProdDistributionOrigin1S3Origin671F5BED"
+           }
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "PriceClass": "PriceClass_100",
+     "ViewerCertificate": {
+      "AcmCertificateArn": {
+       "Fn::GetAtt": [
+        "BetaCertificateCertificateRequestorResource0F0E39E5",
+        "Arn"
+       ]
+      },
+      "MinimumProtocolVersion": "TLSv1.2_2021",
+      "SslSupportMethod": "sni-only"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CairoProdDistribution/Resource"
+   }
+  },
+  "wwwkevinrnet5BADF87C": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "Name": "www.kevinr.net.",
+    "Type": "A",
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "CairoProdDistribution0D9049F6",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z81GUQ5XK4FPH"
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/www.kevinr.net/Resource"
+   }
+  },
+  "cvkevinrnet8E55172A": {
+   "Type": "AWS::Route53::RecordSet",
+   "Properties": {
+    "Name": "cv.kevinr.net.",
+    "Type": "A",
+    "AliasTarget": {
+     "DNSName": {
+      "Fn::GetAtt": [
+       "CairoProdDistribution0D9049F6",
+       "DomainName"
+      ]
+     },
+     "HostedZoneId": {
+      "Fn::FindInMap": [
+       "AWSCloudFrontPartitionHostedZoneIdMap",
+       {
+        "Ref": "AWS::Partition"
+       },
+       "zoneId"
+      ]
+     }
+    },
+    "HostedZoneId": "Z81GUQ5XK4FPH"
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/cv.kevinr.net/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/3VSTW8CIRD9Lb0j1RqTXnWNSQ9NzZr0algYzSgLGwbaNIT/XhbU7aWnefPx3gwzvPDVnM+fxDfNpLrONHY8HryQV5ZDx0hLHjdBXsGz5mRuqJq91Sh/pvDNr85GECQmrYIBB9BogMf9DY2UO04MRc9ja3UJFzsJV1R1yAsnrTEgPVpDPKebh1squoBaTW32zl5ytuhUmIXAeTyhFB56YcQZHN8a+hQaVQ6pZkozLfpOCR53wdQWWeeOE6PlURCBJ74eDZPaBnVy1nget0jeYRcK68PhGc1aSiB6U2A8+vK0ZiTsRsJ/FX9lEnM2eFjla6xbkNapsq2CDuBTYi2QDU4CK/PkC2bNM2sCeds/coUz4XcxDLkqMZO3xy/0/LV45YtF/g4XQpy5kGfpgbfV/gKvyTsxKgIAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "Cairo/CDKMetadata/Default"
+   }
+  }
+ },
+ "Mappings": {
+  "AWSCloudFrontPartitionHostedZoneIdMap": {
+   "aws": {
+    "zoneId": "Z2FDTNDATAQYW2"
+   },
+   "aws-cn": {
+    "zoneId": "Z3RFFRIM2A3IF5"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

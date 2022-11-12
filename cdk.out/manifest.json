@@ -1,0 +1,274 @@
+{
+  "version": "21.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "Cairo.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "Cairo.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "Cairo": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://949565233592/us-east-1",
+      "properties": {
+        "templateFile": "Cairo.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::949565233592:role/cdk-hnb659fds-deploy-role-949565233592-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::949565233592:role/cdk-hnb659fds-cfn-exec-role-949565233592-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-949565233592-us-east-1/3695b08ffabb23f1fa14491cb3e4f3233748469899629c3d49b49708ebf116f0.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "Cairo.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::949565233592:role/cdk-hnb659fds-lookup-role-949565233592-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "Cairo.assets"
+      ],
+      "metadata": {
+        "/Cairo/ProdBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProdBucket0289CECC"
+          }
+        ],
+        "/Cairo/ProdBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProdBucketPolicy62D512B3"
+          }
+        ],
+        "/Cairo/BetaBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BetaBucket9368E41E"
+          }
+        ],
+        "/Cairo/BetaBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BetaBucketPolicyE1D5697D"
+          }
+        ],
+        "/Cairo/CairoPipeline/ArtifactsBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineArtifactsBucket19A923F5"
+          }
+        ],
+        "/Cairo/CairoPipeline/ArtifactsBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineArtifactsBucketPolicy51BA5EEE"
+          }
+        ],
+        "/Cairo/CairoPipeline/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineRole53120952"
+          }
+        ],
+        "/Cairo/CairoPipeline/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineRoleDefaultPolicy06C2393B"
+          }
+        ],
+        "/Cairo/CairoPipeline/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineE8E892FB"
+          }
+        ],
+        "/Cairo/CairoPipeline/Source/githubSource/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineSourcegithubSourceCodePipelineActionRole206CA4E6"
+          }
+        ],
+        "/Cairo/CairoPipeline/Source/githubSource/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineSourcegithubSourceCodePipelineActionRoleDefaultPolicyA315F62D"
+          }
+        ],
+        "/Cairo/CairoPipeline/Build/build/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineBuildbuildCodePipelineActionRole0D80305C"
+          }
+        ],
+        "/Cairo/CairoPipeline/Build/build/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineBuildbuildCodePipelineActionRoleDefaultPolicy99305F51"
+          }
+        ],
+        "/Cairo/CairoPipeline/Beta/betaDeploy/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineBetabetaDeployCodePipelineActionRole922EAA69"
+          }
+        ],
+        "/Cairo/CairoPipeline/Beta/betaDeploy/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineBetabetaDeployCodePipelineActionRoleDefaultPolicy7E68747A"
+          }
+        ],
+        "/Cairo/CairoPipeline/ProdPromotion/prodPromotion/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineProdPromotionprodPromotionCodePipelineActionRoleE222ED19"
+          }
+        ],
+        "/Cairo/CairoPipeline/Prod/prodDeploy/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineProdprodDeployCodePipelineActionRole8D8654EF"
+          }
+        ],
+        "/Cairo/CairoPipeline/Prod/prodDeploy/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoPipelineProdprodDeployCodePipelineActionRoleDefaultPolicy1B0CEF20"
+          }
+        ],
+        "/Cairo/CairoGithubConnection": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoGithubConnection"
+          }
+        ],
+        "/Cairo/CairoBuild/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoBuildRoleAB3BD563"
+          }
+        ],
+        "/Cairo/CairoBuild/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoBuildRoleDefaultPolicy3F6A678C"
+          }
+        ],
+        "/Cairo/CairoBuild/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoBuildED363897"
+          }
+        ],
+        "/Cairo/AdminUser/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AdminUserPolicyF39424FA"
+          }
+        ],
+        "/Cairo/BetaCertificate/CertificateRequestorFunction/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BetaCertificateCertificateRequestorFunctionServiceRole6393C2DF"
+          }
+        ],
+        "/Cairo/BetaCertificate/CertificateRequestorFunction/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BetaCertificateCertificateRequestorFunctionServiceRoleDefaultPolicy9E940F91"
+          }
+        ],
+        "/Cairo/BetaCertificate/CertificateRequestorFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BetaCertificateCertificateRequestorFunction1673CE47"
+          }
+        ],
+        "/Cairo/BetaCertificate/CertificateRequestorResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BetaCertificateCertificateRequestorResource0F0E39E5"
+          }
+        ],
+        "/Cairo/CairoBetaDistribution/Origin1/S3Origin/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoBetaDistributionOrigin1S3Origin9D313AE9"
+          }
+        ],
+        "/Cairo/CairoBetaDistribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoBetaDistribution0470BCF4"
+          }
+        ],
+        "/Cairo/beta.cv.kevinr.net/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "betacvkevinrnetBD3390F8"
+          }
+        ],
+        "/Cairo/AWSCloudFrontPartitionHostedZoneIdMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWSCloudFrontPartitionHostedZoneIdMap"
+          }
+        ],
+        "/Cairo/CairoProdDistribution/Origin1/S3Origin/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoProdDistributionOrigin1S3Origin671F5BED"
+          }
+        ],
+        "/Cairo/CairoProdDistribution/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CairoProdDistribution0D9049F6"
+          }
+        ],
+        "/Cairo/www.kevinr.net/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "wwwkevinrnet5BADF87C"
+          }
+        ],
+        "/Cairo/cv.kevinr.net/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "cvkevinrnet8E55172A"
+          }
+        ],
+        "/Cairo/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/Cairo/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/Cairo/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "Cairo"
+    }
+  }
+}
